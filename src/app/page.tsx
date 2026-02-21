@@ -1,19 +1,10 @@
-import fs from 'fs';
-import path from 'path';
 import WebtoonList from '@/components/WebtoonList';
 import { Webtoon } from '@/components/WebtoonCard';
 import Chatbot from '@/components/Chatbot';
+import webtoonsData from '@/data/webtoons.json';
 
 export default async function Home() {
-  // Load webtoons from the external JSON file
-  const dataPath = path.join(process.cwd(), '../webtoons.json');
-  const fileContents = fs.readFileSync(dataPath, 'utf8');
-  let webtoons: Webtoon[] = [];
-  try {
-    webtoons = JSON.parse(fileContents);
-  } catch (error) {
-    console.error("Error parsing webtoons.json:", error);
-  }
+  const webtoons: Webtoon[] = webtoonsData as Webtoon[];
 
   return (
     <main className="min-h-screen relative pb-24">

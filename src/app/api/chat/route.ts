@@ -1,15 +1,9 @@
 import { NextResponse } from 'next/server';
 import { GoogleGenAI } from '@google/genai';
-import fs from 'fs';
-import path from 'path';
+import webtoons from '@/data/webtoons.json';
 
 // Initialize the Google Gen AI SDK
 const ai = new GoogleGenAI({ apiKey: process.env.GEMINI_API_KEY });
-
-// Load webtoon data once during initialization
-const dataPath = path.join(process.cwd(), '../webtoons.json');
-const fileContents = fs.readFileSync(dataPath, 'utf8');
-const webtoons = JSON.parse(fileContents);
 
 // Create a lightweight context for Gemini to save tokens
 const webtoonContext = webtoons.map((w: any) => ({
