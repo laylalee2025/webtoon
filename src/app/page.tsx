@@ -1,65 +1,59 @@
-import Image from "next/image";
+import fs from 'fs';
+import path from 'path';
+import WebtoonList from '@/components/WebtoonList';
+import { Webtoon } from '@/components/WebtoonCard';
+import Chatbot from '@/components/Chatbot';
 
-export default function Home() {
+export default async function Home() {
+  // Load webtoons from the external JSON file
+  const dataPath = path.join(process.cwd(), '../webtoons.json');
+  const fileContents = fs.readFileSync(dataPath, 'utf8');
+  let webtoons: Webtoon[] = [];
+  try {
+    webtoons = JSON.parse(fileContents);
+  } catch (error) {
+    console.error("Error parsing webtoons.json:", error);
+  }
+
   return (
-    <div className="flex min-h-screen items-center justify-center bg-zinc-50 font-sans dark:bg-black">
-      <main className="flex min-h-screen w-full max-w-3xl flex-col items-center justify-between py-32 px-16 bg-white dark:bg-black sm:items-start">
-        <Image
-          className="dark:invert"
-          src="/next.svg"
-          alt="Next.js logo"
-          width={100}
-          height={20}
-          priority
-        />
-        <div className="flex flex-col items-center gap-6 text-center sm:items-start sm:text-left">
-          <h1 className="max-w-xs text-3xl font-semibold leading-10 tracking-tight text-black dark:text-zinc-50">
-            To get started, edit the page.tsx file.
+    <main className="min-h-screen relative pb-24">
+      {/* Hero Section */}
+      <section className="relative overflow-hidden pt-24 pb-16 px-6 sm:px-12 lg:px-24 bg-gradient-to-b from-primary/20 to-transparent">
+        <div className="absolute top-0 left-1/2 -translate-x-1/2 w-full max-w-[1000px] h-[500px] bg-primary/30 blur-[120px] rounded-full point-events-none -z-10" />
+
+        <div className="max-w-7xl mx-auto z-10 relative text-center">
+          <h1 className="text-5xl md:text-7xl font-extrabold tracking-tight mb-6 text-transparent bg-clip-text bg-gradient-to-r from-white to-white/60">
+            Webtoon Finder
           </h1>
-          <p className="max-w-md text-lg leading-8 text-zinc-600 dark:text-zinc-400">
-            Looking for a starting point or more instructions? Head over to{" "}
-            <a
-              href="https://vercel.com/templates?framework=next.js&utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-              className="font-medium text-zinc-950 dark:text-zinc-50"
-            >
-              Templates
-            </a>{" "}
-            or the{" "}
-            <a
-              href="https://nextjs.org/learn?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-              className="font-medium text-zinc-950 dark:text-zinc-50"
-            >
-              Learning
-            </a>{" "}
-            center.
+          <p className="text-lg md:text-xl text-gray-400 max-w-2xl mx-auto mb-10">
+            Discover your next favorite story. Explore our collection of premium webtoons and let our AI Chatbot recommend the perfect match for your taste.
           </p>
         </div>
-        <div className="flex flex-col gap-4 text-base font-medium sm:flex-row">
-          <a
-            className="flex h-12 w-full items-center justify-center gap-2 rounded-full bg-foreground px-5 text-background transition-colors hover:bg-[#383838] dark:hover:bg-[#ccc] md:w-[158px]"
-            href="https://vercel.com/new?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-            target="_blank"
-            rel="noopener noreferrer"
-          >
-            <Image
-              className="dark:invert"
-              src="/vercel.svg"
-              alt="Vercel logomark"
-              width={16}
-              height={16}
-            />
-            Deploy Now
-          </a>
-          <a
-            className="flex h-12 w-full items-center justify-center rounded-full border border-solid border-black/[.08] px-5 transition-colors hover:border-transparent hover:bg-black/[.04] dark:border-white/[.145] dark:hover:bg-[#1a1a1a] md:w-[158px]"
-            href="https://nextjs.org/docs?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-            target="_blank"
-            rel="noopener noreferrer"
-          >
-            Documentation
-          </a>
+      </section>
+
+      {/* Webtoons Grid */}
+      <section className="max-w-7xl mx-auto px-6 sm:px-12 lg:px-24 z-10 relative">
+        <div className="mb-8 flex items-center justify-between">
+          <h2 className="text-2xl font-bold tracking-tight text-white flex items-center gap-3">
+            <span className="w-8 h-1 bg-primary rounded-full"></span>
+            Popular Webtoons
+          </h2>
+          <span className="text-sm font-medium text-gray-500 bg-secondary px-3 py-1 rounded-full border border-white/5">
+            {webtoons.length} Titles
+          </span>
         </div>
-      </main>
-    </div>
+
+        {webtoons.length > 0 ? (
+          <WebtoonList webtoons={webtoons} />
+        ) : (
+          <div className="py-20 text-center text-gray-500 border border-dashed border-gray-700/50 rounded-2xl">
+            No webtoons found. Please check your data source.
+          </div>
+        )}
+      </section>
+
+      {/* Floating Chatbot */}
+      <Chatbot />
+    </main>
   );
 }
